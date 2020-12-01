@@ -153,24 +153,14 @@ quit;
 /* Centrality of Nodes */
 /***********************/
 proc network
+   nodes              = mycas.outCommNodes
    links              = mycas.commLinks
    outNodes           = mycas.outCentrNodes;
+   nodesVar
+      vars            = (community_1 namewrap);
    centrality
       pagerank        = unweight;
 run;
-
-proc fedsql sessref=mySession;
-   create table outCentrNodes{options replace=true} as
-   select a.*, b.name
-      , b.community_1
-      , c.namewrap
-   from outCentrNodes as a
-   join outCommNodes as b
-   on a.node = b.node
-   join nodes as c
-   on a.node = c.node
-   ;
-quit;
 
 %let comm=25;
 %displayWhere(mycas.outCentrNodes,
